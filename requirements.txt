@@ -1,3 +1,5 @@
 django
+dj_database_url
+whitenoise
 python-dotenv
 psycopg2-binary
