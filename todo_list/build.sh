@@ -14,8 +14,8 @@ echo "Dependencies installed"
 
 # Step 4: Navigate to the Django project directory
 # shellcheck disable=SC2164
-cd todo_list
-echo "Directory changed"
+#cd todo_list
+#echo "Directory changed"
 
 python manage.py collectstatic --noinput
 echo "Static files collected"
@@ -24,3 +24,7 @@ echo "Static files collected"
 python manage.py makemigrations
 python manage.py migrate
 echo "Database migrated"
+
+# Step 6: Run the Django development server
+python manage.py runserver
+echo "Server started"
