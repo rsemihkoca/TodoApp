@@ -24,6 +24,3 @@ echo "Static files collected"
 python manage.py makemigrations
 python manage.py migrate
 echo "Database migrated"
-# Step 6: Start the Django development server
-python manage.py runserver
-echo "Server started"
