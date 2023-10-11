@@ -41,8 +41,9 @@ class TaskList(LoginRequiredMixin, ListView):
     model = Task
     context_object_name = 'tasks' # Modelden gelen verileri tasks adında bir değişken ile templateye gönderiyoruz.
 
+    # get_context_data fonksiyonunu override ediyoruz.
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # get_context_data fonksiyonunu override ediyoruz.
+        context = super().get_context_data(**kwargs)
         context['tasks'] = context['tasks'].filter(user=self.request.user) # context['tasks'] değişkenine filtreleme yapıyoruz.
         context['count'] = context['tasks'].filter(complete=False).count() # context['count'] değişkenine tamamlanmamış görev sayısını gönderiyoruz.
         search_input = self.request.GET.get('search-area') or '' # search-area adında bir input alanı oluşturuyoruz.
