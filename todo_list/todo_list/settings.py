@@ -24,7 +24,7 @@ load_dotenv(os.path.join(BASE_DIR.parent, "todo_list/.env"))
 SECRET_KEY = "django-insecure-rz5u=n$1*ao!^d)zf-jw0x3#i9=bcco87t&80!rz0emnm2*+qd"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app', '.now.sh', '127.0.0.0.1', 'localhost']
 
@@ -130,7 +130,7 @@ LOGIN_URL = "login"
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfilesbuild", "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build", "static")
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
