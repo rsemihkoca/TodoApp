@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView,  DeleteView, FormView
@@ -10,7 +11,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 
+from django.views import View
+from django.shortcuts import redirect
+from django.db import transaction
+
 from .models import Task
+from .forms import PositionForm
 
 class CustomLoginView(LoginView):
     template_name = 'base/login.html'
@@ -39,19 +45,21 @@ class RegisterPage(FormView):
 
 class TaskList(LoginRequiredMixin, ListView):
     model = Task
-    context_object_name = 'tasks' # Modelden gelen verileri tasks adında bir değişken ile templateye gönderiyoruz.
+    context_object_name = 'tasks'
 
-    # get_context_data fonksiyonunu override ediyoruz.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user) # context['tasks'] değişkenine filtreleme yapıyoruz.
-        context['count'] = context['tasks'].filter(complete=False).count() # context['count'] değişkenine tamamlanmamış görev sayısını gönderiyoruz.
-        search_input = self.request.GET.get('search-area') or '' # search-area adında bir input alanı oluşturuyoruz.
-        if search_input:
-            context['tasks'] = context['tasks'].filter(title__icontains=search_input)
-        context['search_input'] = search_input # context['search_input'] değişkenine search_input değerini gönderiyoruz.
-        return context
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+        context['count'] = context['tasks'].filter(complete=False).count()
 
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['tasks'] = context['tasks'].filter(
+                title__contains=search_input)
+
+        context['search_input'] = search_input
+
+        return context
 class TaskDetail(LoginRequiredMixin, DetailView):
     model = Task
     context_object_name = 'task'
@@ -74,3 +82,18 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     model = Task
     context_object_name = 'task'
     success_url = reverse_lazy('tasks')
+    def get_queryset(self):
+        owner = self.request.user
+        return self.model.objects.filter(user=owner)
+
+class TaskReorder(View):
+    def post(self, request):
+        form = PositionForm(request.POST)
+
+        if form.is_valid():
+            positionList = form.cleaned_data["position"].split(',')
+
+            with transaction.atomic():
+                self.request.user.set_task_order(positionList)
+
+        return redirect(reverse_lazy('tasks'))

@@ -12,4 +12,4 @@ class Task(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['complete'] # this will order the tasks by complete status
+        order_with_respect_to = 'user'
