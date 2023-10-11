@@ -17,6 +17,9 @@ echo "Dependencies installed"
 cd todo_list
 echo "Directory changed"
 
+python manage.py collectstatic --noinput
+echo "Static files collected"
+
 # Step 5: Create and apply database migrations
 python manage.py makemigrations
 python manage.py migrate
