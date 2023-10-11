@@ -1,5 +1,7 @@
 #!/bin/bash
+pwd
 
+ls -a
 # Step 1: Create the 'todo' virtual environment
 python3 -m venv todo
 
